@@ -20,14 +20,14 @@ func CheckMongodump() (string, error) {
 	return strings.Replace(string(output), "\n", " ", -1), nil
 }
 
-func CheckMinioClient() (string, error) {
-	output, err := sh.Command("/bin/sh", "-c", "mc version").CombinedOutput()
+func CheckAWSClient() (string, error) {
+	output, err := sh.Command("/bin/sh", "-c", "aws --version").CombinedOutput()
 	if err != nil {
 		ex := ""
 		if len(output) > 0 {
 			ex = strings.Replace(string(output), "\n", " ", -1)
 		}
-		return "", errors.Wrapf(err, "mc failed %v", ex)
+		return "", errors.Wrapf(err, "aws failed %v", ex)
 	}
 
 	return strings.Replace(string(output), "\n", " ", -1), nil

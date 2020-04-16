@@ -104,7 +104,7 @@ func start(c *cli.Context) error {
 	}
 	log.Info(info)
 
-	info, err = backup.CheckMinioClient()
+	info, err = backup.CheckAWSClient()
 	if err != nil {
 		log.Fatal(err)
 	}

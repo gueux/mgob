@@ -21,6 +21,7 @@ ARG VERSION
 ENV MONGODB_TOOLS_VERSION 4.2.1-r0
 ENV GOOGLE_CLOUD_SDK_VERSION 276.0.0
 ENV AZURE_CLI_VERSION 2.0.80
+ENV AWS_CLI_VERSION 1.18.39
 ENV PATH /root/google-cloud-sdk/bin:$PATH
 
 LABEL org.label-schema.build-date=$BUILD_DATE \
@@ -34,8 +35,6 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.schema-version="1.0"
 
 RUN apk add --no-cache ca-certificates tzdata mongodb-tools=${MONGODB_TOOLS_VERSION}
-ADD https://dl.minio.io/client/mc/release/linux-amd64/mc /usr/bin
-RUN chmod u+x /usr/bin/mc
 
 WORKDIR /root/
 
@@ -58,12 +57,13 @@ RUN apk --no-cache add \
     gcloud config set metrics/environment github_docker_image && \
     gcloud --version
 
-# install azure-cli
+# install azure-cli and aws-cli
 RUN apk add py-pip && \
   apk add --virtual=build gcc libffi-dev musl-dev openssl-dev python-dev make && \
   pip install --upgrade pip && \
   pip install cffi && \
   pip install azure-cli==${AZURE_CLI_VERSION} && \
+  pip install awscli==${AWS_CLI_VERSION} && \
   apk del --purge build
 
 COPY --from=0 /go/src/github.com/stefanprodan/mgob/mgob .
